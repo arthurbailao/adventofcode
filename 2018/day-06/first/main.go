@@ -13,28 +13,20 @@ type xy struct {
 	x, y int
 }
 
-func findLimits(coordinates []xy) (xy, xy) {
-	maxX, maxY, minX, minY := coordinates[0].x, coordinates[0].y, coordinates[0].x, coordinates[0].y
+func findBottomRight(coordinates []xy) xy {
+	maxX, maxY := coordinates[0].x, coordinates[0].y
 
 	for _, c := range coordinates {
 		if c.x > maxX {
 			maxX = c.x
 		}
 
-		if c.x < minX {
-			minX = c.x
-		}
-
 		if c.y > maxY {
 			maxY = c.y
 		}
-
-		if c.y < minY {
-			minY = c.y
-		}
 	}
 
-	return xy{minX, minY}, xy{maxX, maxY}
+	return xy{maxX, maxY}
 }
 
 func distance(a xy, b xy) int {
@@ -71,6 +63,46 @@ func printGrid(grid [][]int, width, height int) {
 	}
 }
 
+func findInfiniteAreas(grid [][]int, width, height int) map[int]bool {
+	result := map[int]bool{}
+	for x := 0; x < width; x++ {
+		result[grid[x][0]] = true
+		result[grid[x][height-1]] = true
+	}
+
+	for y := 0; y < height; y++ {
+		result[grid[0][y]] = true
+		result[grid[width-1][y]] = true
+	}
+
+	return result
+}
+
+func sumAreas(grid [][]int) map[int]int {
+	result := map[int]int{}
+	for x := range grid {
+		for y := range grid[x] {
+			result[grid[x][y]]++
+		}
+	}
+	return result
+}
+
+func largestArea(areas map[int]int, infiniteAreas map[int]bool) int {
+	maxArea := 0
+	for i, area := range areas {
+		if i < 0 {
+			continue
+		}
+
+		if area > maxArea && !infiniteAreas[i] {
+			maxArea = area
+		}
+	}
+
+	return maxArea
+}
+
 func main() {
 	file, err := os.Open("../input.txt")
 	if err != nil {
@@ -91,7 +123,7 @@ func main() {
 		coordinates = append(coordinates, xy{x, y})
 	}
 
-	_, bottomRight := findLimits(coordinates)
+	bottomRight := findBottomRight(coordinates)
 	width := bottomRight.x + 1
 	height := bottomRight.y + 1
 
@@ -103,7 +135,6 @@ func main() {
 
 			for i, c := range coordinates {
 				d := distance(xy{x, y}, c)
-				fmt.Println(d)
 				if d < minDistance {
 					grid[x][y] = i
 					minDistance = d
@@ -114,8 +145,12 @@ func main() {
 			}
 		}
 	}
-
 	printGrid(grid, width, height)
 
-	fmt.Printf("%+v\n", coordinates)
+	infiniteAreas := findInfiniteAreas(grid, width, height)
+	areas := sumAreas(grid)
+
+	area := largestArea(areas, infiniteAreas)
+
+	fmt.Printf("%d\n", area)
 }
