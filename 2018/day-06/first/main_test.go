@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestFindLimits(t *testing.T) {
+func TestFindBottomRight(t *testing.T) {
 	coordinates := []xy{
 		xy{2, 6},
 		xy{8, 3},
@@ -12,14 +12,9 @@ func TestFindLimits(t *testing.T) {
 		xy{7, 9},
 	}
 
-	topLeft := xy{1, 1}
 	bottomRight := xy{8, 9}
 
-	tl, br := findLimits(coordinates)
-	if topLeft != tl {
-		t.Errorf("expected topLeft %+v, got %+v", topLeft, tl)
-	}
-
+	br := findBottomRight(coordinates)
 	if bottomRight != br {
 		t.Errorf("expected bottomRight %+v, got %+v", bottomRight, br)
 	}
