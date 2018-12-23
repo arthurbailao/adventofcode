@@ -49,7 +49,6 @@ func makeGrid(width, height int) [][]int {
 }
 
 func printGrid(grid [][]int, width, height int) {
-
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			value := grid[x][y]
