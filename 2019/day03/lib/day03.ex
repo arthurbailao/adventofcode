@@ -48,8 +48,8 @@ defmodule Day03 do
 
   defp move({x, y}, {:right, n}), do: Enum.map((x + 1)..(x + n), &{&1, y})
   defp move({x, y}, {:down, n}), do: Enum.map((y + 1)..(y + n), &{x, &1})
-  defp move({x, y}, {:left, n}), do: Enum.map((x - n)..(x - 1), &{&1, y}) |> Enum.reverse()
-  defp move({x, y}, {:up, n}), do: Enum.map((y - n)..(y - 1), &{x, &1}) |> Enum.reverse()
+  defp move({x, y}, {:left, n}), do: Enum.map((x - 1)..(x - n), &{&1, y})
+  defp move({x, y}, {:up, n}), do: Enum.map((y - 1)..(y - n), &{x, &1})
 
   @doc """
   Finds the Manhattan distance from the central port to the closest intersection
